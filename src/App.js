@@ -1,114 +1,113 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
-const App = () => {
+const fullDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+function App() {
   const [dob, setDob] = useState('');
   const [calendar, setCalendar] = useState([]);
-  const [startDay, setStartDay] = useState(0);
-
-  const today = new Date();
-  const formattedToday = today.toDateString();
+  const [startDayIndex, setStartDayIndex] = useState(0);
+  const [todayIndex, setTodayIndex] = useState(null);
 
   const generateCalendar = () => {
-    if (!dob) return;
+    if (!dob) return alert('Please enter your date of birth.');
 
-    const start = new Date(dob);
-    const end = new Date(dob);
-    end.setFullYear(start.getFullYear() + 100);
+    const startDate = new Date(dob);
+    const endDate = new Date(dob);
+    endDate.setFullYear(endDate.getFullYear() + 100);
+    const originalDayIndex = startDate.getDay();
+    setStartDayIndex(originalDayIndex);
 
-    const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-    const rotatedDays = [];
-    const startIndex = start.getDay();
-    setStartDay(startIndex);
+    const rotatedDays = Array.from({ length: 7 }, (_, i) => fullDayNames[(originalDayIndex + i) % 7].slice(0, 3));
+    const weeks = [];
+    let current = new Date(startDate);
+    let pulseNumber = 1;
+    let quadNumber = 1;
+    let orbitNumber = 1;
+    const todayStr = new Date().toDateString();
 
-    for (let i = 0; i < 7; i++) {
-      rotatedDays.push(days[(startIndex + i) % 7]);
-    }
+    while (current < endDate) {
+      const week = [];
+      for (let i = 0; i < 7; i++) {
+        const dateStr = current.toDateString();
+        week.push({
+          date: new Date(current),
+          isToday: dateStr === todayStr,
+          isPast: new Date(current) < new Date()
+        });
+        current.setDate(current.getDate() + 1);
+      }
 
-    const calendarData = [];
-    let current = new Date(start);
-    let week = [];
-    let weekNum = 1;
-
-    while (current < end) {
-      if (week.length === 0) week.push(weekNum); // first item is week number
-
-      let dateStr = current.toDateString();
-      week.push({
-        date: new Date(current),
-        label: `${current.getDate().toString().padStart(2, '0')} ${current.toLocaleString('default', { month: 'short' })} ${current.getFullYear()}`,
-        isToday: dateStr === formattedToday,
-        isPast: current < today,
+      weeks.push({
+        pulse: pulseNumber,
+        quad: quadNumber,
+        orbit: orbitNumber,
+        days: week
       });
 
-      current.setDate(current.getDate() + 1);
-
-      if (week.length === 8) { // 1 week number + 7 days
-        calendarData.push(week);
-        weekNum++;
-        week = [];
+      if (pulseNumber % 4 === 0) quadNumber++;
+      if (pulseNumber % 52 === 0) {
+        orbitNumber++;
+        quadNumber = 1;
       }
+
+      pulseNumber++;
     }
 
-    setCalendar({ rotatedDays, data: calendarData });
+    setCalendar({ rotatedDays, weeks });
   };
 
   const scrollToToday = () => {
-    const el = document.getElementById('today-week');
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const todayElement = document.querySelector('.today');
+    if (todayElement) {
+      todayElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   };
 
   return (
     <div className="app">
-      <h2>📅 Beautiful 100-Year Calendar from Your Birth Date</h2>
-      <div className="input-section">
-        <input type="date" value={dob} onChange={(e) => setDob(e.target.value)} />
-        <button onClick={generateCalendar}>Generate Calendar</button>
+      <h2>🌌 100-Orbit Spark Calendar</h2>
+      <div className="input-group">
+        <label>Date of Birth:</label>
+        <input type="date" value={dob} onChange={e => setDob(e.target.value)} />
+        <button onClick={generateCalendar}>Generate</button>
         <button onClick={scrollToToday}>Today</button>
       </div>
 
-      {calendar.data && (
+      {calendar.rotatedDays && (
         <div className="calendar">
           <div className="week-header">
-            <div>Week #</div>
-            {calendar.rotatedDays.map(day => (
-              <div key={day}>{day.slice(0, 3)}</div>
-            ))}
+            <div>Pulse #</div>
+            {calendar.rotatedDays.map((day, idx) => <div key={idx}>{day}</div>)}
           </div>
 
-          {calendar.data.map((week, idx) => {
-            const weekNumber = week[0];
-            const yearLabel = weekNumber % 52 === 1 ? (
-              <div className="year-label">Year {Math.ceil(weekNumber / 52)}</div>
-            ) : null;
-
-            const isThisWeekToday = week.slice(1).some(d => d.isToday);
-
-            return (
-              <div key={idx}>
-                {idx !== 0 && idx % 4 === 0 && <div className="week-break" />}
-                {yearLabel}
-                <div
-                  className="week-row"
-                  id={isThisWeekToday ? 'today-week' : undefined}
-                >
-                  <div className="week-number">{weekNumber}</div>
-                  {week.slice(1).map((d, i) => (
-                    <div
-                      key={i}
-                      className={`date-cell ${d.isToday ? 'today' : ''} ${d.isPast ? 'past' : ''}`}
-                    >
-                      {d.label}
-                    </div>
-                  ))}
-                </div>
+          {calendar.weeks.map((week, idx) => (
+            <React.Fragment key={idx}>
+              {week.pulse % 52 === 1 && (
+                <div className="section-label orbit-label">🪐 Orbit {week.orbit}</div>
+              )}
+              {week.pulse % 4 === 1 && (
+                <div className="section-label quad-label">📦 Quad {week.quad}</div>
+              )}
+              <div className="week-row">
+                <div className="week-number">{week.pulse}</div>
+                {week.days.map((day, i) => (
+                  <div
+                    key={i}
+                    className={`date-cell ${day.isToday ? 'today' : ''} ${day.isPast ? 'past' : ''}`}
+                  >
+                    {day.date.getDate().toString().padStart(2, '0')}/
+                    {(day.date.getMonth() + 1).toString().padStart(2, '0')}/
+                    {day.date.getFullYear()}
+                  </div>
+                ))}
               </div>
-            );
-          })}
+            </React.Fragment>
+          ))}
         </div>
       )}
     </div>
   );
-};
+}
 
 export default App;

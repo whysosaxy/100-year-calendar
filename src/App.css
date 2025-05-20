@@ -1,26 +1,29 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f7fa;
+  background: #f4f7fa;
+  color: #333;
 }
 
 .app {
   padding: 30px;
-  text-align: center;
+  max-width: 1200px;
+  margin: auto;
 }
 
 h2 {
-  margin-bottom: 20px;
+  font-size: 1.6rem;
 }
 
-.input-section {
+.input-group {
   margin-bottom: 20px;
 }
 
 input, button {
   padding: 10px 14px;
   font-size: 1rem;
-  margin: 5px;
+  margin-top: 10px;
+  margin-right: 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
 }
@@ -28,7 +31,6 @@ input, button {
 button {
   background-color: #007bff;
   color: white;
-  border: none;
   cursor: pointer;
 }
 
@@ -39,26 +41,22 @@ button:hover {
 .calendar {
   max-height: 75vh;
   overflow-y: auto;
-  margin-top: 20px;
 }
 
-.week-header,
-.week-row {
+.week-header, .week-row {
   display: grid;
   grid-template-columns: 80px repeat(7, 1fr);
   gap: 6px;
-  margin: 0 auto;
-  max-width: 1000px;
 }
 
 .week-header {
   background: #e3eaf2;
   font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
   position: sticky;
   top: 0;
   z-index: 10;
-  padding: 10px;
-  border-radius: 8px;
 }
 
 .week-row {
@@ -67,11 +65,6 @@ button:hover {
   padding: 10px;
   border-radius: 8px;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-  transition: transform 0.1s ease;
-}
-
-.week-row:hover {
-  transform: scale(1.01);
 }
 
 .week-number {
@@ -85,27 +78,31 @@ button:hover {
 .date-cell {
   text-align: center;
   padding: 4px;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .date-cell.past {
-  background-color: #fbd3d3;
+  background-color: #ffe5e5;
 }
 
 .date-cell.today {
-  background-color: #b0eeb0 !important;
+  background-color: #d4f8d4;
   font-weight: bold;
+  border: 1px solid #7bcf7b;
 }
 
-.week-break {
-  height: 16px;
+.section-label {
+  margin: 20px 0 5px;
+  font-weight: bold;
+  padding: 8px;
 }
 
-.year-label {
-  font-weight: bold;
-  color: #555;
-  margin: 10px auto 5px;
-  max-width: 1000px;
-  text-align: left;
-  font-size: 1.1rem;
+.orbit-label {
+  background-color: #e0f3ff;
+  border-left: 5px solid #007bff;
+}
+
+.quad-label {
+  background-color: #f0f0ff;
+  border-left: 5px solid #6c63ff;
 }
