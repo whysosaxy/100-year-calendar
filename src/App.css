@@ -1,38 +1,111 @@
-.App {
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f4f7fa;
+}
+
+.app {
+  padding: 30px;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+h2 {
+  margin-bottom: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.input-section {
+  margin-bottom: 20px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+input, button {
+  padding: 10px 14px;
+  font-size: 1rem;
+  margin: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: #007bff;
   color: white;
+  border: none;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
+button:hover {
+  background-color: #0056b3;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.calendar {
+  max-height: 75vh;
+  overflow-y: auto;
+  margin-top: 20px;
+}
+
+.week-header,
+.week-row {
+  display: grid;
+  grid-template-columns: 80px repeat(7, 1fr);
+  gap: 6px;
+  margin: 0 auto;
+  max-width: 1000px;
+}
+
+.week-header {
+  background: #e3eaf2;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.week-row {
+  background: #fff;
+  margin-bottom: 6px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  transition: transform 0.1s ease;
+}
+
+.week-row:hover {
+  transform: scale(1.01);
+}
+
+.week-number {
+  font-weight: bold;
+  background-color: #f0f3f8;
+  border-radius: 6px;
+  text-align: center;
+  padding: 4px;
+}
+
+.date-cell {
+  text-align: center;
+  padding: 4px;
+  border-radius: 6px;
+}
+
+.date-cell.past {
+  background-color: #fbd3d3;
+}
+
+.date-cell.today {
+  background-color: #b0eeb0 !important;
+  font-weight: bold;
+}
+
+.week-break {
+  height: 16px;
+}
+
+.year-label {
+  font-weight: bold;
+  color: #555;
+  margin: 10px auto 5px;
+  max-width: 1000px;
+  text-align: left;
+  font-size: 1.1rem;
 }
